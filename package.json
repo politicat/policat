@@ -1,0 +1,9 @@
+{
+  "name": "politicat",
+  "version": "0.0.1",
+  "description": "You can find all political relationships between any keywords",
+  "devDependencies": {
+    "bower": "^1.3.3"
+  },
+  "dependencies": {}
+}
