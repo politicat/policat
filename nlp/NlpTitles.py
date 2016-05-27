@@ -43,14 +43,17 @@ def insertDataToDB(data):
                     related_id = related_obj['_id']
 
                 relation_obj = db.keyword_relations.find_one({'keyword1_id' : n_id, 'keyword2_id' : related_id})
+                if relation_obj == None:
+                    relation_obj = db.keyword_relations.find_one({'keyword1_id' : related_id, 'keyword2_id' : n_id})
+
                 relation_id = -1
 
                 if relation_obj == None:
-                    relation_id = db.keyword_relations.insert_one({'keyword1_id' : n_id, 'keyword2_id' : related_id, 'count' : 1}).inserted_id
+                    relation_id = db.keyword_relations.insert_one({'keyword1_id' : n_id, 'keyword2_id' : related_id, 'total_count' : 1}).inserted_id
                     print('relation inserted: ', relation_id)
                 else:
                     relation_id = relation_obj['_id']
-                    result = db.keyword_relations.update_one({'_id' : relation_id}, {'$inc' : {'count' : 1}})
+                    result = db.keyword_relations.update_one({'_id' : relation_id}, {'$inc' : {'total_count' : 1}})
                     print('relation updated: ', result.modified_count)
 
 def findRelatedKeywords(keyword):
