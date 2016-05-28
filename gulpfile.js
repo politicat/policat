@@ -1,14 +1,16 @@
 const gulp = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
+const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
 const watch = require('gulp-watch');
 
 const paths = {
-  scripts: ['server/**/*.js']
+  server: ['server/**/*.js'],
+  client: ['client/**/*.js']
 };
 
 gulp.task('babel', () =>
-    gulp.src(paths.scripts)
+    gulp.src(paths.server)
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
@@ -17,8 +19,15 @@ gulp.task('babel', () =>
         .pipe(gulp.dest('build'))
 );
 
-gulp.task('watch', () =>
-    gulp.watch(paths.scripts, ['babel'])
-);
+gulp.task('webpack', function() {
+  return gulp.src('./client/index.js')
+    .pipe(webpack( require('./webpack.config.js') ))
+    .pipe(gulp.dest('public/'));
+});
 
-gulp.task('default', ['watch', 'babel']);
+gulp.task('watch', () => {
+    gulp.watch(paths.server, ['babel']);
+    gulp.watch(paths.client, ['webpack']);
+});
+
+gulp.task('default', ['watch', 'babel', 'webpack']);
