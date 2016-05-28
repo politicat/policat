@@ -5,7 +5,7 @@ from konlpy.corpus import kolaw
 from konlpy.tag import Hannanum
 
 client = MongoClient('localhost', 27017)
-db = client.nlp_titles
+db = client.politicat
 
 def main():
 #     doc = kolaw.open('constitution.txt').read()
