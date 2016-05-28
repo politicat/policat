@@ -14,10 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/../public'));
 app.use('/', router);
 
-app.get('/hello', (req, res) => {
-    return res.send('Can you hear me?');
-});
-
 const server = app.listen(port, () => {
   console.log('Express listening on port', port);
 });
