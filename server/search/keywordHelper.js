@@ -6,6 +6,8 @@ var findKeyword = Q.nbind(Keyword.findOne, Keyword);
 var findKeywordRelations = Q.nbind(KeywordRelations.find, KeywordRelations);
 
 var api = {
+  // * input : keyword object ({keyword: '...', _id: '...'})
+  // * output : relation array [['keyword', 3(count)] , ... ]
   findRelations: function(keyword) {
     let relationsResult = [];
     let relationsTemp;

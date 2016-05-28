@@ -6,7 +6,7 @@ const watch = require('gulp-watch');
 
 const paths = {
   server: ['server/**/*.js'],
-  client: ['client/**/*.js']
+  client: ['client/**/*.js', 'client/**/*.css']
 };
 
 gulp.task('babel', () =>

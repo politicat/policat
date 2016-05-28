@@ -3,33 +3,38 @@ import ReactDOM from 'react-dom';
 import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router';
 import $ from 'jquery';
 
+import d3 from 'd3';
+import galaxy from './D3/galaxy.js';
+import mainD3 from './D3/main-d3.js';
+
+require('./style.css');
+
 class Main extends React.Component {
   constructor() {
     super();
     this.searchEnterkey = this.searchEnterkey.bind(this);
     this.searchClick = this.searchClick.bind(this);
+    this.postSearch = this.postSearch.bind(this);
   }
-  searchEnterkey(e) {
-    if(e.key === 'Enter') {
-      $.ajax({
-        type: 'POST',
-        url: '/search',
-        data: {data : this.refs.searchInput.value}
-      }).done(function(data) {
-        console.log('value? ', data);
-      });
-      this.refs.searchInput.value = '';
-    }
-  }
-  searchClick() {
+  postSearch() {
+    let root = this.refs.searchInput.value;
     $.ajax({
       type: 'POST',
       url: '/search',
       data: {data : this.refs.searchInput.value}
     }).done(function(data) {
-      console.log('value? ', data);
+      //console.log('value? ', data);
+      mainD3(data, root);
     });
     this.refs.searchInput.value = '';
+  }
+  searchEnterkey(e) {
+    if(e.key === 'Enter') {
+      this.postSearch();
+    }
+  }
+  searchClick() {
+    this.postSearch();
   }
   render() {
     return (

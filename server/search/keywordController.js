@@ -19,6 +19,7 @@ var api = {
           rootNode = keyword.keyword;
           helper.findRelations(keyword)
           .then(function(results) {
+            res.send(results);
             console.log('results: ', results);
           });
         }})
