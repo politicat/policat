@@ -8,12 +8,9 @@ client = MongoClient('localhost', 27017)
 db = client.politicat
 
 def main():
-#     doc = kolaw.open('constitution.txt').read()
-    # lines = doc.split('\n')
-    # insertDataToDB(data)
-    insertDataToDB(['전기뱀장어 김예슬 황인경', '전기뱀장어 김예슬 기타', '전기뱀장어 황인경 보컬'])
-
-    findRelatedKeywords('전기뱀장어')
+    doc = kolaw.open('constitution.txt').read()
+    lines = doc.split('\n')
+    # insertDataToDB(lines)
 
 def insertDataToDB(data):
     for l in data:
