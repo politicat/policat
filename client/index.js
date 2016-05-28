@@ -14,20 +14,22 @@ class Main extends React.Component {
       $.ajax({
         type: 'POST',
         url: '/search',
-        data: this.refs.searchInput.value
+        data: {data : this.refs.searchInput.value}
       }).done(function(data) {
         console.log('value? ', data);
       });
+      this.refs.searchInput.value = '';
     }
   }
   searchClick() {
     $.ajax({
       type: 'POST',
       url: '/search',
-      data: this.refs.searchInput.value
+      data: {data : this.refs.searchInput.value}
     }).done(function(data) {
       console.log('value? ', data);
     });
+    this.refs.searchInput.value = '';
   }
   render() {
     return (
