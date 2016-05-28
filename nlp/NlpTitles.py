@@ -1,3 +1,5 @@
+# run with 'python3 nlpTitles.py'
+
 import pymongo
 from pymongo import MongoClient
 
