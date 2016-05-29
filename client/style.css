@@ -1,27 +1,28 @@
+@import url(http://fonts.googleapis.com/earlyaccess/hanna.css);
+
 svg rect {
   fill: steelblue;
 }
 
 svg text{
-  fill: white;
-  font: 10px sans-serif;
+  fill: gray;
+  font-family: 'Hanna', sans-serif;
+  font-size: 50%;
   text-anchor: end;
 }
 
 svg circle {
-  fill: rgb(31, 79, 80);
+  fill: #45b29d;
   fill-opacity: .75;
-  stroke: rgb(31, 119, 80);
-  stroke-width: 1px;
+  stroke: none;
 }
 
 .leaf circle {
-  fill: #ff7f0e;
-  fill-opacity: 1;
+  fill: #efc94c;
+  stroke: none;
 }
 
 .link {
   stroke: #999;
   stroke-opacity: .6;
 }
-
