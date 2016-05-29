@@ -1,7 +1,11 @@
 // 입력받은 기간 내의 모든 날짜를 갖는 array를 출력
 function arrayOfDates(dateFrom, dateTo, diff) {
   // argument형식은 (yyyymmdd, yyyymmdd, xxxxxxx), diff는 일자의 차이를 the number of days로 변환한 것.
-  if (Number(dateTo - dateFrom) < 0) return null;
+  if (Number(dateTo - dateFrom) < 0) {
+    var temp = dateTo;
+    dateTo = dateFrom;
+    dateFrom = temp;
+  }
 
   var result = [];
   dateFrom = dateFrom.toString();
@@ -20,7 +24,7 @@ function arrayOfDates(dateFrom, dateTo, diff) {
     var dateStr = module.exports.convertNumDateToFullString(y, m, d);
 
     if (Number(dateTo) - Number(dateStr) < 0) break;
-    result.unshift(dateStr);
+    result.push(dateStr);
     d += 1;
     if (d > 31) {
       m += 1;
@@ -34,7 +38,7 @@ function arrayOfDates(dateFrom, dateTo, diff) {
   return result;
 }
 
-// naver 뉴스 기사의 시간 표기를 Date 객체로 변환
+// naver 뉴스 기사의 시간 표기를 string 객체로 변환
 function convertTime(str) {
 
   //2016-04-13 23:56
@@ -54,7 +58,9 @@ function convertTime(str) {
   str = str.slice(str.indexOf(":") + 1);
   var $minute = str;
   // console.log($year, ":", $month, ":", $day, "h:", $hour, " m: ", $minute);
-  return new Date($year, $month - 1, $day, $hour, $minute);
+  // return new Date($year, $month - 1, $day, $hour, $minute);
+  return Number($year + $month + $day + $hour + $minute);
+
 
 }
 
@@ -91,8 +97,34 @@ function getTodayDateStr() {
   return todayStr;
 }
 
+function convertNumToStringWithNLength(num, length) {
+  // 연, 월, 일의 num을 8자리의 string으로 출력
+  var convertedNum = num.toString();
+  // console.log('ml: ', convertedM.length, ' dl: ', convertedD.length);
+  while (convertedNum.length < length) {
+    // console.log('in loop', typeof convertedY);
+    convertedNum = "0" + convertedNum;
+  }
+  return convertedNum;
+}
+
+function addNDays(str, n) {
+  var y = str.slice(0, 4);
+  var m = str.slice(4, 6);
+  var d = str.slice(6, 8);
+
+  var date = new Date(y, m - 1, d);
+  date.setDate(date.getDate() + n);
+
+  return module.exports.convertNumDateToFullString(date.getFullYear(), date.getMonth() + 1, date.getDate());
+}
 
 module.exports.arrayOfDates = arrayOfDates;
 module.exports.convertTime = convertTime;
 module.exports.convertNumDateToFullString = convertNumDateToFullString;
 module.exports.getTodayDateStr = getTodayDateStr;
+module.exports.convertNumToStringWithNLength = convertNumToStringWithNLength;
+module.exports.addNDays = addNDays;
+// console.log(arrayOfDates("20110101", "20110101"));
+// console.log(convertNumToStringWithNLength(4, 5));
+// console.log(addNDays("20221111", 50));
