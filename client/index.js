@@ -22,7 +22,6 @@ class Main extends React.Component {
       url: '/search',
       data: {data : this.refs.searchInput.value}
     }).done(function(data) {
-      console.log('enter!');
       mainD3(data, root);
     });
     this.refs.searchInput.value = '';
@@ -36,7 +35,7 @@ class Main extends React.Component {
     this.postSearch();
   }
   render() {
-    console.log('Main render');
+    d3.select('svg').remove();
     return (
       <div>
         <input type="text" placeholder="Input" ref="searchInput" onKeyPress={this.searchEnterkey}/>
@@ -48,7 +47,6 @@ class Main extends React.Component {
 
 class App extends React.Component {
   render() {
-    console.log('App render');
     return (
       <div>
         <Link to="/"><img src="./testimg.png" height="42" width="42"/>Main</Link>
@@ -63,6 +61,5 @@ let rootElement = document.getElementById('app');
 ReactDOM.render(<Router history = {browserHistory}>
       <Route path = "/" component = {App}>
        <IndexRoute component = {Main} />
-       <Route path = "/main" component = {Main} />
       </Route>
    </Router>, rootElement);
