@@ -1,13 +1,8 @@
 import express from 'express';
+import keywordController from './search/keywordController.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send(200);
-});
-
-router.post('/search', (req, res) => {
-  res.send(200, req.body);
-});
+router.post('/search', keywordController.search);
 
 export default router;

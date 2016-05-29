@@ -2,6 +2,9 @@ import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import router from './router';
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb://localhost/politicat');
 
 const app = express();
 
