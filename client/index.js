@@ -15,6 +15,7 @@ class Main extends React.Component {
     this.searchEnterkey = this.searchEnterkey.bind(this);
     this.searchClick = this.searchClick.bind(this);
     this.postSearch = this.postSearch.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
   postSearch() {
     let root = this.refs.searchInput.value;
@@ -24,8 +25,9 @@ class Main extends React.Component {
       data: {data : this.refs.searchInput.value}
     }).done(function(data) {
       //console.log('value? ', data);
-      mainD3(data, root);
-    });
+      this.resizeFunc = mainD3.resize(data, root);
+      this.resizeFunc();
+    }.bind(this));
     this.refs.searchInput.value = '';
   }
   searchEnterkey(e) {
@@ -36,6 +38,19 @@ class Main extends React.Component {
   searchClick() {
     this.postSearch();
   }
+
+  handleResize(e) {
+    if (this.resizeFunc) {
+      this.resizeFunc();
+    }
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
   render() {
     return (
       <div>
