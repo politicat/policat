@@ -12,7 +12,7 @@ db = client.politicat
 def main():
     doc = kolaw.open('constitution.txt').read()
     lines = doc.split('\n')
-    # insertDataToDB(lines)
+    insertDataToDB(lines)
 
 def insertDataToDB(data):
     for l in data:
