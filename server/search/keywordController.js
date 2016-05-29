@@ -8,19 +8,44 @@ var findKeyword = Q.nbind(Keyword.findOne, Keyword);
 
 var api = {
   search: function (req, res, next) {
-    let keyword = req.body.data;
+    let root = req.body.data;
 
-    let relationsResult = [];
-    let relationsTemp;
-    let rootNode;
-    findKeyword({keyword: keyword})
-      .then(function (keyword) {
-        if (keyword) {
-          rootNode = keyword.keyword;
-          helper.findRelations(keyword)
+    var relationsResult = [];
+    findKeyword({keyword: root})
+      .then(function (rootKeyword) {
+        if (rootKeyword) {
+          helper.findRelations(rootKeyword)
           .then(function(results) {
-            res.send(results);
-            console.log('results: ', results);
+            results = results.sort(function(a, b) {
+              return b[b.length-1] - a[a.length-1];
+            });
+
+            var rootRelations = results.slice(0, 10);
+            rootRelations = rootRelations.map(function(val) {
+              let rootChildKeyword = val[0];
+              let rootChildCnt = val[1];
+
+              return findKeyword({keyword: rootChildKeyword})
+                .then(function (childKeywordObj) {
+                  return helper.findRelations(childKeywordObj)
+                    .then(function(results) {
+                      results = results.sort(function(a, b) {
+                        return b[b.length-1] - a[a.length-1];
+                      });
+
+                      results = results.slice(0, 5);
+                      results.forEach(function(val) {
+                        relationsResult.push([rootChildKeyword, val[0], rootChildCnt + val[1]]);
+                      });
+                    });
+                });
+            });
+
+            Q.all(rootRelations)
+            .then(function () {
+              console.log('results: ', relationsResult);
+              res.send(relationsResult);
+            });
           });
         }})
       .fail(function (error) {

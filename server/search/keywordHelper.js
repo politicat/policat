@@ -12,6 +12,7 @@ var api = {
     let relationsResult = [];
     let relationsTemp;
 
+    // find by keyword1_id
     return findKeywordRelations({keyword1_id: keyword['_id']})
     .then(function (relations) {
       relationsTemp = relations;
@@ -24,6 +25,7 @@ var api = {
       relationsTemp.forEach(function(val, i) {
         relationsResult.push([results[i].keyword, relationsTemp[i].total_count]);
       });
+      // find by keyword2_id
       return findKeywordRelations({keyword2_id: keyword['_id']});
     })
     .then(function (relations) {
