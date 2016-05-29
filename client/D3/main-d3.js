@@ -1,4 +1,5 @@
-export default function main(rows, root) {
+var api = {
+  main: function(rows, root) {
     var w = window,
         d = document,
         e = d.documentElement,
@@ -30,40 +31,40 @@ export default function main(rows, root) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     function unflatten(rows, rootName) {
-        var root = {name: rootName, children: [], childmap: {}, value: 0, depth: 0};
-        var allnodes = [];
-        for (var i = 0; i < rows.length; i++) { // rows
-            var row = rows[i];
-            for (var c = 0, parent = root; c < rows[0].length-1; c++) { //cols
-                var node, label = row[c];
-                if (! parent.childmap[label]) {
-                    node = { name: label, children: [],
-                             childmap: {}, parent: parent,
-                             value: 0, depth: parent.depth+1};
-                    allnodes.push(node);
-                    if (!! label) { parent.childmap[label] = node;
-                                   parent.children.push(node); }
-                }
-                if (c == rows[0].length-2) { // last column of names
-                    node.value = row[row.length-1];
-                    // add value to all parents value;
-                    for (var p = parent; p; p = p.parent ) { p.value += node.value; }
-                }
-                if (!! label) { parent = parent.childmap[label]; }
-            }
-        }
-        // remove the children of leaf nodes
-        allnodes.forEach(function(n,i,a) {
-            if (n.children.length === 0) {
-                n.size = n.value;
-                delete n.children;
-            } });
-        return root;
+      var root = {name: rootName, children: [], childmap: {}, value: 0, depth: 0};
+      var allnodes = [];
+      for (var i = 0; i < rows.length; i++) { // rows
+          var row = rows[i];
+          for (var c = 0, parent = root; c < rows[0].length-1; c++) { //cols
+              var node, label = row[c];
+              if (! parent.childmap[label]) {
+                  node = { name: label, children: [],
+                           childmap: {}, parent: parent,
+                           value: 0, depth: parent.depth+1};
+                  allnodes.push(node);
+                  if (!! label) { parent.childmap[label] = node;
+                                 parent.children.push(node); }
+              }
+              if (c == rows[0].length-2) { // last column of names
+                  node.value = row[row.length-1];
+                  // add value to all parents value;
+                  for (var p = parent; p; p = p.parent ) { p.value += node.value; }
+              }
+              if (!! label) { parent = parent.childmap[label]; }
+          }
+      }
+      // remove the children of leaf nodes
+      allnodes.forEach(function(n,i,a) {
+          if (n.children.length === 0) {
+              n.size = n.value;
+              delete n.children;
+          } });
+      return root;
     }
 
-    var root = unflatten(rows, root);
+    var newRoot = unflatten(rows, root);
 
-    var nodes = galaxy.nodes(root);
+    var nodes = galaxy.nodes(newRoot);
     var links = galaxy.links(nodes);
 
     var link = svg.selectAll(".link")
@@ -89,7 +90,7 @@ export default function main(rows, root) {
                                    (d.source.y-d.target.y)*d.target.r/len(d); });
     }
 
-    var node = svg.datum(root).selectAll(".node")
+    var node = svg.datum(newRoot).selectAll(".node")
         .data(nodes)
         .enter().append("g")
         .attr("class", function(d) { return d.children ? "node" : "leaf node"; })
@@ -107,5 +108,14 @@ export default function main(rows, root) {
         .attr("dy", ".3em")
         .style("text-anchor", "middle")
         .text(function(d) { return d.name.substring(0, d.r / 3); });
-}
+  },
+
+  resize: function(rows, root) {
+    return function() {
+      this.main(rows, root);
+    }.bind(this);
+  }
+};
+
+export default api;
 
