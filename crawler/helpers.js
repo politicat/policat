@@ -46,9 +46,8 @@ function convertTime(str) {
   // console.log("date");
   var $year = str.slice(0, str.indexOf("-"));
   str = str.slice(str.indexOf("-") + 1);
-  // console.log(str);
   // month는 0이 JAN.
-  var $month = Number(str.slice(0, str.indexOf("-")));
+  var $month = str.slice(0, str.indexOf("-"));
   str = str.slice(str.indexOf("-") + 1);
   // console.log("m: ", $month);
   var $day = str.slice(0, str.indexOf(" "));
