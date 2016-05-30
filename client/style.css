@@ -31,7 +31,25 @@ svg text{
 #app #bar{
   list-style: none;
   background-color: rgb(184,184,184);
-  text-align: center;
+  text-align: left;
   padding: 10px;
   margin: 0;
+  height: 20px;
+}
+
+#app #bar #searchInput{
+  width: 300px;
+  height: 16px;
+  position: absolute;
+  margin-left: 5px;
+}
+
+#app #bar #searchButton{
+  position: absolute;
+  left: 350px;
+  height: 20px;
+}
+
+#vis {
+  margin-top: 10px;
 }
