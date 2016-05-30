@@ -1,26 +1,25 @@
-var fill = d3.scale.category20b();
+window.fill = d3.scale.category20b();
 
 var w = window.innerWidth,
-        h = window.innerHeight - 400
+        h = window.innerHeight - 100;
 
 var max//,
         // fontSize;
-window.fontsize = undefined;
 
-var layout = d3.layout.cloud()
+window.mainlayout = d3.layout.cloud()
         .timeInterval(Infinity)
         .size([w, h])
         .fontSize(function(d) {
-            return fontSize(+d.value);
+            return window.fontSize(+d.value);
         })
         .text(function(d) {
             return d.key;
         })
         .on("end", draw);
 
-var body = d3.select("body").append("div").attr("class", "vis");
+var body = d3.select("body").append("div").attr("id", "vis");
 
-var svg = d3.select(".vis").append("svg")
+var svg = d3.select("#vis").append("svg")
         .attr("width", w)
         .attr("height", h);
 
@@ -34,11 +33,11 @@ var vis = svg.append("g").attr("transform", "translate(" + [w >> 1, h >> 1] + ")
 
 function draw(data, bounds) {
     var w = window.innerWidth,
-        h = window.innerHeight;
+        h = window.innerHeight - 100;
         console.log("bound is ", bounds);
     svg.attr("width", w).attr("height", h);
 
-    var scale = bounds ? Math.min(
+    window.scale = bounds ? Math.min(
             w / Math.abs(bounds[1].x - w / 2),
             w / Math.abs(bounds[0].x - w / 2),
             h / Math.abs(bounds[1].y - h / 2),
@@ -72,7 +71,7 @@ function draw(data, bounds) {
         return d.font;
     })
             .style("fill", function(d) {
-                return fill(d.text.toLowerCase());
+                return window.fill(d.text.toLowerCase());
             })
             .text(function(d) {
                 return d.text;
@@ -82,12 +81,12 @@ function draw(data, bounds) {
 }
 
 function update(tags) {
-    layout.font('impact').spiral('archimedean');
+    window.mainlayout.font('impact').spiral('archimedean');
     window.fontSize = d3.scale['sqrt']().range([10, 100]);
     if (tags.length){
-        fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
+        window.fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
     }
-    layout.stop().words(tags).start();
+    window.mainlayout.stop().words(tags).start();
 }
 
 export default update;
