@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var api = {
   main: function(rows, root) {
     var w = window,
@@ -29,6 +31,7 @@ var api = {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
     function unflatten(rows, rootName) {
       var root = {name: rootName, children: [], childmap: {}, value: 0, depth: 0};
@@ -94,7 +97,21 @@ var api = {
         .data(nodes)
         .enter().append("g")
         .attr("class", function(d) { return d.children ? "node" : "leaf node"; })
-        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .on("click", function(d) {
+          if(d.depth !== 0) {
+            var root = d.name;
+            d3.select('svg').remove();
+            $.ajax({
+              type: 'POST',
+              url: '/search',
+              data: {data : d.name}
+            }).done(function(data) {
+              window.resizeFunc = api.resize(data, root);
+              window.resizeFunc();
+            }.bind(this));
+          }
+        });
 
     node.append("title")
         .text(function(d) {
@@ -105,12 +122,12 @@ var api = {
         .attr("r", function(d) { return d.r; });
 
     node.append("text")
-        .attr("dy", ".2em")
+        .attr("dy", ".3em")
         .style("text-anchor", "middle")
         .style("font-size", function(d){
-          var len = d.name.substring(0, d.r/3).length;
-          var size = d.r/3;
-          size *= 10/len;
+          var len = d.name.substring(0, d.r / 3).length;
+          var size = d.r / 3;
+          size *= 5 / len;
           size += 1;
           return Math.round(size)+'px';
         })
