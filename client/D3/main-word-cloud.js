@@ -1,11 +1,7 @@
-import jquery from 'jquery';
-
 var fill = d3.scale.category20b();
 
 var w = window.innerWidth,
-        h = window.innerHeight - jquery(document).find('#bar').height();
-        console.log(jquery('#bar').height());
-        console.log(jquery('#bar'));
+        h = window.innerHeight - 400
 
 var max//,
         // fontSize;

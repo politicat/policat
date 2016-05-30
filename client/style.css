@@ -31,7 +31,7 @@ svg text{
 #app #bar{
   list-style: none;
   background-color: rgb(184,184,184);
-  text-align: center;
+  text-align: left;
   padding: 10px;
   margin: 0;
 }
