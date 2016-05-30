@@ -1,10 +1,12 @@
 import Q from 'q';
-import Keyword from './keywordModel.js';
-import KeywordRelations from './keywordRelationsModel.js';
+import Keyword from './model/keyword.js';
+import KeywordRelations from './model/keywordRelations.js';
+import TodayKeyword from './model/todayKeyword.js';
 import helper from './keywordHelper.js';
 
 // Promisify a few mongoose methods with the `q` promise library
 var findKeyword = Q.nbind(Keyword.findOne, Keyword);
+var findTodayKeyword = Q.nbind(TodayKeyword.find, TodayKeyword);
 
 var api = {
   search: function (req, res, next) {
@@ -51,6 +53,18 @@ var api = {
       .fail(function (error) {
         next(error);
       });
+  },
+
+  home: function(req, res, next) {
+    findTodayKeyword({})
+    .then(function(results) {
+      results = results.map(function(val) {
+        return [val.keyword, val.count];
+      });
+
+      console.log('results: ', results);
+      res.send(results);
+    });
   }
 };
 
