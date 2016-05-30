@@ -1,3 +1,4 @@
+/* request-sync deprecated, but using because of 'encoding: null' setting */
 var request = require('request-sync'),
     cheerio = require('cheerio'),
     iconv = require('iconv-lite'),
@@ -9,12 +10,8 @@ var helpers = require('./helpers'),
     articleModel = require('./model/article').articleModel;
 
 
-
-// mongoose.connect("mongodb://localhost/politicat");
-
 var reqOption = {
   method: "GET"
-  // , uri: url
   , headers: {"User-Agent": "Mozilla/5.0"} // 아래 encoding을 넣지 않으면 node에서 자동으로 utf8로 디코드해서 iconv-lite로 아무리 디코드해봐야 소용없음
   , encoding: null //followRedirect :false
 };
@@ -36,7 +33,7 @@ function crawling(section, page, date) {
   var urlSet = ["http://news.naver.com/main/list.nhn?sid1=" + searchOption.section, "listType=title", "mid=sec", "mode=LSD", "date=" + searchOption.date, "page=" + searchOption.page];
   var url = urlSet.join("&");
 
-  console.log(url);
+  //console.log(url);
 
   // var reqOption = {
   //   method: "GET"
@@ -47,7 +44,7 @@ function crawling(section, page, date) {
 
   // 존재하지 않는 day을 입력한 경우 --> 해당 월의 마지막 day의 첫페이지 출력
   // 존재하지 않는 페이지를 입력한 경우 --> 해당 day의 마지막 페이지 출력
-  console.log("now working");
+  //console.log("now working");
 
   // statuscode가 400 이상인 경우 5회 반복
   var response = request(url, reqOption),
@@ -127,6 +124,5 @@ function crawling(section, page, date) {
   return saveArticle(articleDom.length - 1);
 
 }
-
 
 module.exports = crawling;

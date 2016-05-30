@@ -97,17 +97,6 @@ function getTodayDateStr() {
   return todayStr;
 }
 
-function convertNumToStringWithNLength(num, length) {
-  // 연, 월, 일의 num을 8자리의 string으로 출력
-  var convertedNum = num.toString();
-  // console.log('ml: ', convertedM.length, ' dl: ', convertedD.length);
-  while (convertedNum.length < length) {
-    // console.log('in loop', typeof convertedY);
-    convertedNum = "0" + convertedNum;
-  }
-  return convertedNum;
-}
-
 function addNDays(str, n) {
   var y = str.slice(0, 4);
   var m = str.slice(4, 6);
@@ -123,8 +112,4 @@ module.exports.arrayOfDates = arrayOfDates;
 module.exports.convertTime = convertTime;
 module.exports.convertNumDateToFullString = convertNumDateToFullString;
 module.exports.getTodayDateStr = getTodayDateStr;
-module.exports.convertNumToStringWithNLength = convertNumToStringWithNLength;
 module.exports.addNDays = addNDays;
-// console.log(arrayOfDates("20110101", "20110101"));
-// console.log(convertNumToStringWithNLength(4, 5));
-// console.log(addNDays("20221111", 50));

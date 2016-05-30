@@ -6,19 +6,46 @@ from pymongo import MongoClient
 from konlpy.corpus import kolaw
 from konlpy.tag import Hannanum
 
+from datetime import date
+
 client = MongoClient('localhost', 27017)
 db = client.politicat
 
+
 def main():
-    doc = kolaw.open('constitution.txt').read()
-    lines = doc.split('\n')
-    insertDataToDB(lines)
+    last_date = getLastDateInCrawlingToNlp()
+    data = getDataFromCrawlingDB(last_date)
+    insertDataToDB(data)
+
+
+def getLastDateInCrawlingToNlp():
+    row = db.last_date_nlp.find_one({})
+    if row == None:
+        return -1
+    else:
+        return row['date']
+
+
+def getDataFromCrawlingDB(last_date):
+    if last_date != -1:
+        return db.articles.find({'date': {'$gte': last_date}})
+    else:
+        return db.articles.find({})
+
 
 def insertDataToDB(data):
+    db.today_keywords.drop()
+
     for l in data:
-        nouns = Hannanum().nouns(l)
+        nouns = Hannanum().nouns(l['title'])
 
         for n in nouns:
+            # insert today_keyword
+            if date.today().strftime("%Y%m%d") == l['date']:
+                result = db.today_keywords.update_one({'keyword' : n}, {'$inc' : {'count' : 1}}, True)
+                print('today_keywords updated: ', result)
+
+            # insert keyword, keyword_relations
             n_obj = db.keywords.find_one({'keyword' : n})
             n_id = -1
 
@@ -48,30 +75,27 @@ def insertDataToDB(data):
                 relation_id = -1
 
                 if relation_obj == None:
-                    relation_id = db.keyword_relations.insert_one({'keyword1_id' : n_id, 'keyword2_id' : related_id, 'total_count' : 1}).inserted_id
+                    if date.today().strftime("%Y%m%d") == l['date']:
+                        count_in_day = 1
+                    else:
+                        count_in_day = 0
+
+                    relation_id = db.keyword_relations.insert_one({'keyword1_id' : n_id, 'keyword2_id' : related_id, 'updated_at' : l['date'], 'count_in_day' : count_in_day, 'total_count' : 1}).inserted_id
                     print('relation inserted: ', relation_id)
                 else:
                     relation_id = relation_obj['_id']
-                    result = db.keyword_relations.update_one({'_id' : relation_id}, {'$inc' : {'total_count' : 1}})
-                    print('relation updated: ', result.modified_count)
 
-def findRelatedKeywords(keyword):
-    related_keyword = {}
+                    if date.today().strftime("%Y%m%d") == relation_obj['updated_at']:
+                        result = db.keyword_relations.update_one({'_id' : relation_id}, {'$inc' : {'total_count' : 1, 'count_in_day' : 1}})
+                        print('relation updated, count in day incremented : ', result.modified_count)
+                    else:
+                        result = db.keyword_relations.update_one({'_id' : relation_id}, {'$inc' : {'total_count' : 1}, '$set' : {'count_in_day' : 1, 'updated_at' : l['date']}})
+                        print('relation updated, init count in day to one : ', result.modified_count)
 
-    keyword_id = db.keywords.find_one({'keyword' : keyword})['_id']
 
-    result1 = db.keyword_relations.find({'keyword1_id' : keyword_id})
-    result2 = db.keyword_relations.find({'keyword2_id' : keyword_id})
+        result = db.last_date_nlp.update_one({}, {'$set': {'date': l['date']}}, True)
+        print('last_date updated: ', result.raw_result)
+        print('data: ', l)
 
-    for r in result1:
-        r_keyword = db.keywords.find_one({'_id' : r['keyword2_id']})['keyword']
-        related_keyword[r_keyword] = True
-
-    for r in result2:
-        r_keyword = db.keywords.find_one({'_id' : r['keyword1_id']})['keyword']
-        related_keyword[r_keyword] = True
-
-    print('result: ', related_keyword.keys())
-    return related_keyword.keys()
 
 main()
