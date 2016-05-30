@@ -52,22 +52,11 @@ class Main extends React.Component {
   }
 
   render() {
+    d3.select('svg').remove();
     return (
-      <div>
-        <h2> Main </h2>
+      <div id='bar'>
+        <div><Link to="/"><img src="./Kitty.png" height="42" width="42"/></Link> Please write any keywords you want to know! </div>
         <input type="text" placeholder="Input" ref="searchInput" onKeyPress={this.searchEnterkey}/>
-        <button onClick={this.searchClick}>Search</button>
-      </div>
-    );
-  }
-}
-
-class Search extends React.Component {
-  render() {
-    return (
-      <div>
-        <h2> Search </h2>
-        <input type="text" placeholder="Input" ref="searchInput"/>
         <button onClick={this.searchClick}>Search</button>
       </div>
     );
@@ -78,12 +67,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <ul>
-          <li><Link to="">Main</Link></li>
-          <li><Link to="search">Search</Link></li>
-        </ul>
         {this.props.children}
       </div>
+
     );
   }
 }
@@ -93,7 +79,5 @@ let rootElement = document.getElementById('app');
 ReactDOM.render(<Router history = {browserHistory}>
       <Route path = "/" component = {App}>
          <IndexRoute component = {Main} />
-         <Route path = "" component = {Main} />
-         <Route path = "search" component = {Search} />
       </Route>
    </Router>, rootElement);

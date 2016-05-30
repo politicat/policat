@@ -105,8 +105,15 @@ var api = {
         .attr("r", function(d) { return d.r; });
 
     node.append("text")
-        .attr("dy", ".3em")
+        .attr("dy", ".2em")
         .style("text-anchor", "middle")
+        .style("font-size", function(d){
+          var len = d.name.substring(0, d.r/3).length;
+          var size = d.r/3;
+          size *= 10/len;
+          size += 1;
+          return Math.round(size)+'px';
+        })
         .text(function(d) { return d.name.substring(0, d.r / 3); });
   },
 
@@ -118,4 +125,3 @@ var api = {
 };
 
 export default api;
-
