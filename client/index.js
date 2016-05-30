@@ -86,7 +86,7 @@ class Main extends React.Component {
   }
 
   render() {
-    // d3.select('svg').remove();
+    d3.select('svg').remove();
 
     return (
       <div id='bar'>
