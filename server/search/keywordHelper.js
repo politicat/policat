@@ -1,6 +1,6 @@
 import Q from 'q';
-import Keyword from './keywordModel.js';
-import KeywordRelations from './keywordRelationsModel.js';
+import Keyword from './model/keyword.js';
+import KeywordRelations from './model/keywordRelations.js';
 
 var findKeyword = Q.nbind(Keyword.findOne, Keyword);
 var findKeywordRelations = Q.nbind(KeywordRelations.find, KeywordRelations);
