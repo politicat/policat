@@ -11,15 +11,16 @@ svg text{
   text-anchor: end;
 }
 
-svg circle {
+.root circle {
+  fill: #DF5A49;
+}
+
+.node circle {
   fill: #45b29d;
-  fill-opacity: .75;
-  stroke: none;
 }
 
 .leaf circle {
   fill: #efc94c;
-  fill-opacity: 1;
 }
 
 .link {
