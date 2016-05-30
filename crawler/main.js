@@ -4,34 +4,22 @@ var mongoose = require('mongoose')
 var crawler = require('./crawler')
     ,helpers = require('./helpers')
     ,articleModel = require('./model/article').articleModel
-    ,lastDateModel = require('./model/article').lastDateModel
-    ,counter = require('./model/article').counter;
+    ,lastDateModel = require('./model/article').lastDateModel;
 
 var settings = {
-  sectionList: [100, 101, 102],
-  dateArray: function() {
-                var todayStr = helpers.getTodayDateStr();
-                var todayBeforeYearStr = todayStr - 10000;
-                // var dateArray = helpers.arrayOfDates(todayBeforeYearStr, todayStr);
-                var dateArray = helpers.arrayOfDates("20151102", "20151107");
-
-                return dateArray;
-             }
+  sectionList: [100, 101, 102]
 };
-console.log(settings.dateArray());
 mongoose.connect("mongodb://localhost/politicat");
-
 
 
 getArticles()
 
 
-function getArticles(dateFrom, dateTo) {
+function getArticles() {
 // argument 입력 형식은 (yyyymmdd, yyyymmdd, xxx), type은 number.
 
   // if (dateTo - dateFrom < 0) return console.log("error: date error");
 
-  var dateArray = settings.dateArray();
   // var dateArray = ["20160423","20160422"]//,"20160421"];
 
   var saveByPage = function(section, date, page) {
@@ -49,7 +37,6 @@ function getArticles(dateFrom, dateTo) {
         saveByPage(section, date, page - 1);
       });
     } else {
-      console.log('nonnnnnnn');
       return;
     }
 
@@ -107,28 +94,21 @@ function getArticles(dateFrom, dateTo) {
 
 
     };
-    console.log('oinmnnnnnnnnnnnnnnnnnn');
     lastDateModel.findOne({_id: 'entityId'}, function(err, date) {
-      console.log('herererer');
       if (err) throw err;
 
       if (date === null) {
-        console.log('nulllllllll');
-        var today = new Date();
         var dateFrom = new Date();
         // 첫 init때는 아래를 우선
         // 원하는 최대 기간 정하기(dateF가 아래보다 이후일 경우 dateF를 기준으로 계산, 아래보다 이전일 경우 아래를 우선)
         dateFrom.setDate(dateFrom.getDate() - 30);
-        console.log("strrrrrrrrrr dateFrom: ", dateFrom.toDateString());
         var dateFromStr = helpers.convertNumDateToFullString(dateFrom.getFullYear(), dateFrom.getMonth() + 1, dateFrom.getDate());
-        console.log('strrrrrrrrrr:', dateFromStr);
 
         lastDateModel.findByIdAndUpdate({_id: 'entityId'}, {$set: {date: dateFromStr}}, {"upsert": true, "new": true}, function(error, count)   {
             if(error) throw error;
             saveByDate(dateFromStr);
         });
       } else {
-        console.log("not nulllllllll");
         var today = new Date();
         var todayStr = helpers.convertNumDateToFullString(today.getFullYear(), today.getMonth() + 1, today.getDate());
         if (Number(date.date) - Number(dateF) < 0) {
@@ -149,29 +129,18 @@ function getArticles(dateFrom, dateTo) {
           routine(helpers.arrayOfDates(helpers.addNDays(date.date, 1), helpers.addNDays(date.date, 1)));
 
         } else if (Number(date.date) - Number(dateF) >= 0) {
-
-
-
-          console.log('date.date >= dateF', date.date, dateF);
+          //console.log('date.date >= dateF', date.date, dateF);
 
           articleModel.find({date: date.date}).remove(function(err, obj) {
             if (err) throw err;
-            console.log('remove duplicates');
-            console.log('length is ', obj.result.n);
-            counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: -1 * obj.result.n} }, function(error, count)   {
-                if(error)
-                    return next(error);
-                routine(helpers.arrayOfDates(date.date, date.date));
-            });
-            // routine(helpers.arrayOfDates(date.date, todayStr));
+/*            console.log('remove duplicates');*/
+            /*console.log('length is ', obj.result.n);*/
           })
         }
 
       }
     })
   }
-
-
 
   // var lastpage = crawler(100, 1000, "20160527");
   // crawler(100, lastpage, "20160527");
