@@ -56,7 +56,7 @@ class Main extends React.Component {
     return (
       <div id='bar'>
         <div><Link to="/"><img src="./Kitty.png" height="42" width="42"/></Link> Please write any keywords you want to know! </div>
-        <input type="text" placeholder="Input" ref="searchInput" onKeyPress={this.searchEnterkey}/>
+        <input type="text" placeholder="search" ref="searchInput" onKeyPress={this.searchEnterkey}/>
         <button onClick={this.searchClick}>Search</button>
       </div>
     );

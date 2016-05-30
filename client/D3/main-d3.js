@@ -32,7 +32,6 @@ var api = {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
     function unflatten(rows, rootName) {
       var root = {name: rootName, children: [], childmap: {}, value: 0, depth: 0};
       var allnodes = [];
@@ -96,7 +95,15 @@ var api = {
     var node = svg.datum(newRoot).selectAll(".node")
         .data(nodes)
         .enter().append("g")
-        .attr("class", function(d) { return d.children ? "node" : "leaf node"; })
+        .attr("class", function(d) {
+          if(d.depth === 0) {
+            return "root";
+          } else if(d.depth === 1) {
+            return "node";
+          } else if(d.depth === 2) {
+            return "leaf";
+          }
+        })
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
         .on("click", function(d) {
           if(d.depth !== 0) {
@@ -132,6 +139,20 @@ var api = {
           return Math.round(size)+'px';
         })
         .text(function(d) { return d.name.substring(0, d.r / 3); });
+
+    node.select("circle")
+      .on("mouseover", function(d) {
+        if(d.depth !== 0) {
+          d3.select(this)
+            .transition()
+            .attr("r", function(d) { return 1.5 * d.r; });
+        }
+      })
+      .on("mouseout", function() {
+        d3.select(this)
+          .transition()
+          .attr("r", function(d) { return d.r; });
+      });
   },
 
   resize: function(rows, root) {
