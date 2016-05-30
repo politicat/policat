@@ -24,9 +24,8 @@ class Main extends React.Component {
       url: '/search',
       data: {data : this.refs.searchInput.value}
     }).done(function(data) {
-      //console.log('value? ', data);
-      this.resizeFunc = mainD3.resize(data, root);
-      this.resizeFunc();
+      window.resizeFunc = mainD3.resize(data, root);
+      window.resizeFunc();
     }.bind(this));
     this.refs.searchInput.value = '';
   }
@@ -39,11 +38,12 @@ class Main extends React.Component {
     this.postSearch();
   }
 
-  handleResize(e) {
-    if (this.resizeFunc) {
-      this.resizeFunc();
+  handleResize() {
+    if (window.resizeFunc) {
+      window.resizeFunc();
     }
   }
+
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
   }
