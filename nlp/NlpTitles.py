@@ -95,8 +95,6 @@ def worker(nouns, l):
 
 
 def insertDataToDB(data):
-    db.today_keywords.drop()
-
     threads = []
     for l in data:
         nouns = Hannanum().nouns(l['title'])

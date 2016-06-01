@@ -41,7 +41,7 @@ class Main extends React.Component {
   hotIssues() {
 
     // d3.select('#vis').remove();
-    d3.select('svg').remove();
+    // d3.select('svg').remove();
     $.ajax({
       type: 'GET',
       url: '/home'
@@ -90,7 +90,7 @@ class Main extends React.Component {
 
     return (
       <div id='bar'>
-        <Link to="/"><img src="./Kitty.png" height="25" width="25"/></Link>
+        <a href="/"><img src="./Kitty.png" height="25" width="25"/></a>
         <input id="searchInput" type="text" placeholder="Please write any keywords you want to know!" ref="searchInput" onKeyPress={this.searchEnterkey}/>
         <button id="searchButton" onClick={this.searchClick}>Search</button>
       </div>

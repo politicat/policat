@@ -8,7 +8,6 @@ svg text{
   fill: white;
   font-family: 'Hanna', sans-serif;
   font-size: 10px;
-  text-anchor: end;
 }
 
 .root circle {
@@ -46,7 +45,7 @@ svg text{
 
 #app #bar #searchButton{
   position: absolute;
-  left: 350px;
+  left: 360px;
   height: 20px;
 }
 
